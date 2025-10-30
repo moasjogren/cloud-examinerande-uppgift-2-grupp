@@ -1,12 +1,14 @@
-## Planera och bestäm i gruppen
+## Planera och bestäm i gruppen:
 
-- Vad ska vi använda för projekthanterings-verktyg? Github Projects eller Jira?
-- Vad ska vi ha för branching strategy?
-- Hur ska vi dela upp arbetet? Hur sköter vi code reviews på pull requests?
-- Gå igenom emailet igen och fundera - vad ska vi lägga till för issues och features?
-- Vad vill vi utforska för tester och ramverk för testning?
-- Vad vill vi använda för pipeline i våra Github Actions?
-- Vad har vi för vägar att gå när det kommer till deployment?
+1. Vad ska vi använda för projekthanterings-verktyg? Github Projects eller Jira?
+2. Vad ska vi ha för branching strategy?
+3. Hur ska vi dela upp arbetet? Hur sköter vi code reviews på pull requests?
+4. Gå igenom emailet igen och fundera - vad ska vi lägga till för issues och features?
+5. Vad vill vi utforska för tester och ramverk för testning?
+6. Vad vill vi använda för pipeline i våra Github Actions?
+7. Vad har vi för vägar att gå när det kommer till deployment?
+
+## Svar:
 
 1. Github Projects
 2. Tydliga feature-brancher. Exempel: feature-backend-routes. Tydliga commit-meddelanden.
@@ -36,4 +38,6 @@
      - Vi vill kunna testa projektet med docker (har lagt en basic config fil men känns som att den kan optimeras? Docker imagen blir jättestor?)
      - Använd AI-verktyg för att skriva tester eller konfigurationsfiler
 
----
+5. Vi skapar tester med Jest.
+6. Implementerat just nu (30/10) Copilot Code Review på varje PR. Docker Image på frontend vid varje PR. Utöka gärna senare!
+7. Frontend och backend separat. Vi vill testa minst en ny platform, t.ex Render eller Fly.io.
