@@ -3,13 +3,13 @@ FROM node:20-alpine
 WORKDIR /frontend
 
 # Kopiera package files
-COPY package*.json ./
+COPY frontend/package*.json ./ 
 
 # Installera dependencies
 RUN npm install
 
 # Kopiera all kod
-COPY . .
+COPY frontend/. ./
 
 # Bygg applikationen
 RUN npm run build
