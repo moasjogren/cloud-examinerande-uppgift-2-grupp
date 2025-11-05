@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -11,5 +11,9 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "esm": false,
+    "transpileOnly": true
+  }
 }
