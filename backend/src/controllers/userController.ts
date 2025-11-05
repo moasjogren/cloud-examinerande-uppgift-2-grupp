@@ -60,7 +60,8 @@ export async function deleteUser(req: Request, res: Response) {
   const { id } = req.params;
   try {
     const deletedUser = await User.findByIdAndDelete(id);
-    if (!deletedUser) return res.status(400).send("Could not find user to delete");
+    if (!deletedUser)
+      return res.status(400).send("Could not find user to delete");
     return res.status(200).json({ message: "User deleted", deletedUser });
   } catch (error) {
     return res
