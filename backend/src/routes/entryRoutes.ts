@@ -15,3 +15,6 @@ router.post("/entries", createEntry);
 router.get("/entries/:id", getEntryById);
 router.patch("/entries/:id", updateEntry);
 router.delete("/entries/:id", deleteEntry);
+
+
+export default router;
