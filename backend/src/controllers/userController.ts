@@ -46,7 +46,7 @@ export async function updateUser(req: Request, res: Response) {
   const { data } = req.body;
   try {
     const updatedUser = await User.findByIdAndUpdate(data);
-    if (!updatedUser) res.status(400).send("Could not update user");
+    if (!updatedUser) return res.status(400).send("Could not update user");
 
     res.status(200).json({ message: "User updated", updatedUser });
   } catch (error) {
