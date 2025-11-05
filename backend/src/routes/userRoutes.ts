@@ -13,6 +13,6 @@ router.get("/users", getAllUsers);
 router.post("/users", createUser);
 router.get("/users/:id", getUserById);
 router.patch("/users/:id", updateUser);
-router.delete("/users", deleteUser);
+router.delete("/users/:id", deleteUser);
 
 export default router;
