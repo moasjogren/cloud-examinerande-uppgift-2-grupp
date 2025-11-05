@@ -19,8 +19,8 @@ export async function createUser(req: Request, res: Response) {
   try {
     const createdUser = await User.create({ username, email, password });
 
-    if (!createdUser) res.status(400).send("Could not create user");
-    return res.status(201).json({ message: "User created", createUser });
+    if (!createdUser) return res.status(400).send("Could not create user");
+    return res.status(201).json({ message: "User created", createdUser });
   } catch (error) {
     return res
       .status(500)
