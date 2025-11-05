@@ -16,7 +16,7 @@ export async function getEntryById(req: Request, res: Response) {
   const { id } = req.body;
 
   try {
-    const entry = Entry.findById(id);
+    const entry = await Entry.findById(id);
   } catch (error) {}
 }
 
