@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/users", getAllUsers);
 router.post("/users", createUser);
-router.get("/users", getUserById);
+router.get("/users/:id", getUserById);
 router.patch("/users", updateUser);
 router.delete("/users", deleteUser);
 
