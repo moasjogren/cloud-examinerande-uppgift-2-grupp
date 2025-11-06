@@ -16,7 +16,7 @@ export async function getAllEntries(_req: Request, res: Response) {
 }
 
 export async function getEntryById(req: Request, res: Response) {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
     const entry = await Entry.findById(id);
@@ -26,6 +26,22 @@ export async function getEntryById(req: Request, res: Response) {
     return res
       .status(500)
       .json({ error, message: "Internal server error getting entry" });
+  }
+}
+
+export async function getAllEntriesByUser(req: Request, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const entries = await Entry.find({ userId: id });
+
+    if (entries.length === 0) return res.status(200).send("No entries found");
+
+    return res.status(200).json(entries);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error, message: "Internal server error getting entries" });
   }
 }
 
@@ -59,7 +75,7 @@ export async function updateEntry(req: Request, res: Response) {
   } catch (error) {
     return res
       .status(500)
-      .json({ error, message: "Internal server error updating entries" });
+      .json({ error, message: "Internal server error updating entry" });
   }
 }
 
@@ -73,6 +89,6 @@ export async function deleteEntry(req: Request, res: Response) {
   } catch (error) {
     return res
       .status(500)
-      .json({ error, message: "Internal server error updating entries" });
+      .json({ error, message: "Internal server error deleting entry" });
   }
 }
