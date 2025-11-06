@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLoginStore } from "../zustand/loginContext";
 // import { signIn } from '@/lib/supabase/auth'
 
 export default function LoginPage() {
@@ -11,21 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError(null);
-  //   setLoading(true);
-
-  //   try {
-  //     await signIn({ email, password });
-  //     router.push("/dashboard");
-  //   } catch (err: any) {
-  //     setError(err.message || "An error occurred during login");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const { login } = useLoginStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +47,8 @@ export default function LoginPage() {
       // Save userId to localStorage
       if (user._id) {
         localStorage.setItem("userId", user._id);
+        // Update login state in zustand store
+        login();
       }
       
       router.push("/dashboard");

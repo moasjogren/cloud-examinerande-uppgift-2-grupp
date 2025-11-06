@@ -3,13 +3,15 @@
 //import { signOut } from '@/lib/supabase/auth'
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { useLoginStore } from "../app/zustand/loginContext";
 
 export default function Header() {
   const router = useRouter();
+  const { logout } = useLoginStore();
 
   const handleSignOut = async () => {
     try {
-      //await signOut()
+      logout();
       router.push("/login");
     } catch (error) {
       console.error("Error signing out:", error);
