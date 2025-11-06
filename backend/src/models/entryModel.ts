@@ -10,7 +10,5 @@ const entrySchema = new Schema(
   { timestamps: true, collection: "entries" }
 );
 
-export type EntryType = InferSchemaType<typeof entrySchema> & {
-  _id: Types.ObjectId;
-};
+export type EntryType = InferSchemaType<typeof entrySchema>;
 export const Entry = mongoose.model("Entry", entrySchema);
