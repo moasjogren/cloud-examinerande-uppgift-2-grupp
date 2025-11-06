@@ -9,17 +9,18 @@
   /* Dark mode colors */
   --color-dark-bg: #1a1410;
   --color-dark-surface: #2d2419;
-  --color-dark-text: #f5f1e8;
+  --color-dark-text: #ffffff;
   --color-dark-muted: #a89f91;
 }
 
 @layer base {
   body {
-    @apply bg-cream text-dark-brown;
+    @apply bg-cream text-dark-brown transition-colors;
   }
 
-  .dark body {
-    @apply bg-[--color-dark-bg] text-[--color-dark-text];
+  :root.dark body {
+    background-color: var(--color-dark-bg);
+    color: var(--color-dark-text);
   }
 
   h1,
@@ -76,5 +77,63 @@
     @apply border-[--color-dark-muted]/30 
 		       hover:bg-[--color-dark-surface] 
 		       hover:border-[--color-dark-muted]/50;
+  }
+
+  .header-component {
+    @apply border-b border-warm-gray/20 bg-white transition-colors;
+  }
+
+  .dark .header-component {
+    background-color: var(--color-dark-surface);
+    border-color: rgba(168, 159, 145, 0.2);
+  }
+
+  .header-title {
+    color: var(--color-dark-brown);
+    transition: color 200ms;
+  }
+
+  .dark .header-title {
+    color: var(--color-dark-text);
+  }
+
+  .header-signout-btn {
+    @apply text-sm text-warm-gray hover:text-dark-brown transition-colors;
+  }
+
+  .dark .header-signout-btn {
+    color: var(--color-dark-muted);
+  }
+
+  .dark .header-signout-btn:hover {
+    color: var(--color-dark-text);
+  }
+
+  .page-title {
+    transition: color 200ms;
+  }
+
+  .dark .page-title {
+    color: var(--color-dark-text) !important;
+  }
+
+  .back-button {
+    transition: color 200ms;
+  }
+
+  .dark .back-button {
+    color: var(--color-dark-muted);
+  }
+
+  .dark .back-button:hover {
+    color: var(--color-dark-text);
+  }
+
+  .form-label {
+    transition: color 200ms;
+  }
+
+  .dark .form-label {
+    color: var(--color-dark-text) !important;
   }
 }

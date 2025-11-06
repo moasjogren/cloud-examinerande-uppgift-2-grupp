@@ -17,17 +17,12 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b border-warm-gray/20 bg-white">
+    <header className="header-component">
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 flex items-center justify-between">
-        <h1 className="text-xl md:text-2xl font-serif text-dark-brown">
-          Journal
-        </h1>
+        <h1 className="header-title text-xl md:text-2xl font-serif">Journal</h1>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <button
-            onClick={handleSignOut}
-            className="text-sm text-warm-gray hover:text-dark-brown transition-colors"
-          >
+          <button onClick={handleSignOut} className="header-signout-btn">
             Sign Out
           </button>
         </div>

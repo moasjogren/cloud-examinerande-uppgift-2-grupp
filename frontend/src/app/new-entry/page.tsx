@@ -49,14 +49,17 @@ export default function NewEntryPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/entries`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ title, content, userId }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ title, content, userId }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to create entry");
       }
@@ -86,11 +89,11 @@ export default function NewEntryPage() {
         <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="text-warm-gray hover:text-dark-brown text-sm mb-4"
+            className="back-button text-warm-gray hover:text-dark-brown text-sm mb-4"
           >
             ← Back to entries
           </button>
-          <h1 className="text-3xl md:text-4xl font-serif text-dark-brown mb-2">
+          <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-2">
             New Entry
           </h1>
           <p className="text-warm-gray text-sm">{displayDate}</p>
@@ -100,7 +103,7 @@ export default function NewEntryPage() {
           <div>
             <label
               htmlFor="title"
-              className="block text-sm mb-2 text-dark-brown font-medium"
+              className="form-label block text-sm mb-2 text-dark-brown font-medium"
             >
               Title
             </label>
@@ -119,7 +122,7 @@ export default function NewEntryPage() {
           <div>
             <label
               htmlFor="content"
-              className="block text-sm mb-2 text-dark-brown font-medium"
+              className="form-label block text-sm mb-2 text-dark-brown font-medium"
             >
               Content
             </label>
@@ -141,7 +144,11 @@ export default function NewEntryPage() {
           )}
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <button type="submit" className="btn-primary w-full sm:w-auto" disabled={loading}>
+            <button
+              type="submit"
+              className="btn-primary w-full sm:w-auto"
+              disabled={loading}
+            >
               {loading ? "Saving..." : "Save Entry"}
             </button>
             <button
