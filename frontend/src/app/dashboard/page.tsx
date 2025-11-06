@@ -34,20 +34,29 @@ export default function DashboardPage() {
         );
         
         if (entriesResponse.ok) {
-          const entriesData = await entriesResponse.json();
-          if (Array.isArray(entriesData)) {
-            const mappedEntries = entriesData.map((entry: any) => ({
-              id: entry._id || entry.id,
-              title: entry.title,
-              content: entry.content,
-              tags: entry.tags || [],
-              userId: entry.userId,
-              createdAt: entry.createdAt || entry.created_at,
-              updatedAt: entry.updatedAt || entry.updated_at,
-            }));
-            setEntries(mappedEntries);
+          const contentType = entriesResponse.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const entriesData = await entriesResponse.json();
+            if (Array.isArray(entriesData)) {
+              const mappedEntries = entriesData.map((entry: any) => ({
+                id: entry._id || entry.id,
+                title: entry.title,
+                content: entry.content,
+                tags: entry.tags || [],
+                userId: entry.userId,
+                createdAt: entry.createdAt || entry.created_at,
+                updatedAt: entry.updatedAt || entry.updated_at,
+              }));
+              setEntries(mappedEntries);
+            } else {
+              setEntries([]);
+            }
           } else {
-            setEntries([]);
+            // Backend returned "No entries found" as plain text - just set empty array
+            const textData = await entriesResponse.text();
+            if (textData === "No entries found") {
+              setEntries([]);
+            }
           }
         }
       } catch (err: any) {
