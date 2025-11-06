@@ -55,7 +55,17 @@
   }
 
   .dark .input-field {
-    @apply bg-[--color-dark-surface] border-[--color-dark-muted]/30 focus:border-[--color-dark-text] text-[--color-dark-text];
+    background-color: #ffffff;
+    border-color: rgba(168, 159, 145, 0.3);
+    color: #000000;
+  }
+
+  .dark .input-field:focus {
+    border-color: var(--color-dark-text);
+  }
+
+  .dark .input-field::placeholder {
+    color: #666666;
   }
 
   .card {
@@ -63,7 +73,8 @@
   }
 
   .dark .card {
-    @apply bg-[--color-dark-surface] border-[--color-dark-muted]/20;
+    background-color: var(--color-dark-surface);
+    border-color: rgba(168, 159, 145, 0.2);
   }
 
   .theme-toggle {
@@ -110,6 +121,7 @@
   }
 
   .page-title {
+    color: #000000;
     transition: color 200ms;
   }
 
@@ -118,7 +130,12 @@
   }
 
   .back-button {
+    color: var(--color-warm-gray);
     transition: color 200ms;
+  }
+
+  .back-button:hover {
+    color: var(--color-dark-brown);
   }
 
   .dark .back-button {
@@ -130,10 +147,46 @@
   }
 
   .form-label {
+    color: #000000;
     transition: color 200ms;
   }
 
   .dark .form-label {
+    color: var(--color-dark-text) !important;
+  }
+
+  .auth-subtitle {
+    color: #000000;
+    transition: color 200ms;
+  }
+
+  .dark .auth-subtitle {
+    color: var(--color-dark-muted);
+  }
+
+  .auth-link-text {
+    color: #000000;
+    transition: color 200ms;
+  }
+
+  .dark .auth-link-text {
+    color: var(--color-dark-muted);
+  }
+
+  .auth-link {
+    color: #000000;
+    transition: color 200ms;
+  }
+
+  .auth-link:hover {
+    text-decoration: underline;
+  }
+
+  .dark .auth-link {
+    color: var(--color-dark-text) !important;
+  }
+
+  .dark .auth-link:hover {
     color: var(--color-dark-text) !important;
   }
 }
