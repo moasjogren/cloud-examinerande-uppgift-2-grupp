@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 // import { signIn } from '@/lib/supabase/auth'
 
 export default function LoginPage() {
@@ -34,34 +35,37 @@ export default function LoginPage() {
 
     try {
       // Get all users and find the one with matching email
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to login");
       }
       const data = await response.json();
-      
+
       // Find user with matching email
       const users = data.users || [];
       const user = users.find((u: any) => u.email === email);
-      
+
       if (!user) {
         throw new Error("Invalid email or password");
       }
-      
+
       // Note: In production, password should be verified on backend
       // For now, we just check if user exists
       if (user.password !== password) {
         throw new Error("Invalid email or password");
       }
-      
+
       // Save userId to localStorage
       if (user._id) {
         localStorage.setItem("userId", user._id);
       }
-      
+
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
@@ -71,11 +75,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
+      {/* Theme toggle in top right corner */}
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-serif text-dark-brown mb-3">Journal</h1>
-          <p className="text-warm-gray text-sm">Sign in to your account</p>
+          <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-3">
+            Journal
+          </h1>
+          <p className="auth-subtitle text-warm-gray text-sm">
+            Sign in to your account
+          </p>
         </div>
 
         <div className="card">
@@ -83,7 +96,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm mb-2 text-dark-brown"
+                className="form-label block text-sm mb-2 text-dark-brown"
               >
                 Email
               </label>
@@ -101,7 +114,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm mb-2 text-dark-brown"
+                className="form-label block text-sm mb-2 text-dark-brown"
               >
                 Password
               </label>
@@ -132,9 +145,12 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-warm-gray">
+            <p className="auth-link-text text-sm text-warm-gray">
               Don't have an account?{" "}
-              <Link href="/signup" className="text-dark-brown hover:underline">
+              <Link
+                href="/signup"
+                className="auth-link text-dark-brown hover:underline"
+              >
                 Sign up
               </Link>
             </p>

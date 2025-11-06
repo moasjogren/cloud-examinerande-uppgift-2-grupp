@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 // import { signUp } from '@/lib/supabase/auth'
 
 export default function SignupPage() {
@@ -19,25 +20,32 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password, username: email.split("@")[0] }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+            password,
+            username: email.split("@")[0],
+          }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to signup");
       }
       const data = await response.json();
       console.log(data);
-      
+
       // Save userId to localStorage
       if (data.createdUser?._id) {
         localStorage.setItem("userId", data.createdUser._id);
       }
-      
+
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "An error occurred during signup");
@@ -47,11 +55,20 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
+      {/* Theme toggle in top right corner */}
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-serif text-dark-brown mb-3">Journal</h1>
-          <p className="text-warm-gray text-sm">Create your account</p>
+          <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-3">
+            Journal
+          </h1>
+          <p className="auth-subtitle text-warm-gray text-sm">
+            Create your account
+          </p>
         </div>
 
         <div className="card">
@@ -59,7 +76,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm mb-2 text-dark-brown"
+                className="form-label block text-sm mb-2 text-dark-brown"
               >
                 Email
               </label>
@@ -77,7 +94,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm mb-2 text-dark-brown"
+                className="form-label block text-sm mb-2 text-dark-brown"
               >
                 Password
               </label>
@@ -95,7 +112,7 @@ export default function SignupPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm mb-2 text-dark-brown"
+                className="form-label block text-sm mb-2 text-dark-brown"
               >
                 Confirm Password
               </label>
@@ -126,9 +143,12 @@ export default function SignupPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-warm-gray">
+            <p className="auth-link-text text-sm text-warm-gray">
               Already have an account?{" "}
-              <Link href="/login" className="text-dark-brown hover:underline">
+              <Link
+                href="/login"
+                className="auth-link text-dark-brown hover:underline"
+              >
                 Sign in
               </Link>
             </p>
