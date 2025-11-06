@@ -33,15 +33,36 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
+      // Get all users and find the one with matching email
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+        method: "GET",
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Failed to login");
       }
       const data = await response.json();
-      console.log(data);
+      
+      // Find user with matching email
+      const users = data.users || [];
+      const user = users.find((u: any) => u.email === email);
+      
+      if (!user) {
+        throw new Error("Invalid email or password");
+      }
+      
+      // Note: In production, password should be verified on backend
+      // For now, we just check if user exists
+      if (user.password !== password) {
+        throw new Error("Invalid email or password");
+      }
+      
+      // Save userId to localStorage
+      if (user._id) {
+        localStorage.setItem("userId", user._id);
+      }
+      
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
     } finally {

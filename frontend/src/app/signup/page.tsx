@@ -13,46 +13,32 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault()
-  //   setError(null)
-
-  //   if (password !== confirmPassword) {
-  //     setError('Passwords do not match')
-  //     return
-  //   }
-
-  //   if (password.length < 6) {
-  //     setError('Password must be at least 6 characters')
-  //     return
-  //   }
-
-  //   setLoading(true)
-
-  //   try {
-  //     await signUp({ email, password })
-  //     router.push('/dashboard')
-  //   } catch (err: any) {
-  //     setError(err.message || 'An error occurred during signup')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
     try {
-      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password, username: email.split("@")[0] }),
       });
       if (!response.ok) {
         throw new Error("Failed to signup");
       }
       const data = await response.json();
       console.log(data);
+      
+      // Save userId to localStorage
+      if (data.createdUser?._id) {
+        localStorage.setItem("userId", data.createdUser._id);
+      }
+      
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "An error occurred during signup");
     } finally {
