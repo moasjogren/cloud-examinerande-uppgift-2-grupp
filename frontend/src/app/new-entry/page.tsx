@@ -15,7 +15,7 @@ export default function NewEntryPage() {
 
   useEffect(() => {
     async function checkAuth() {
-      const user = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
+      const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
         credentials: "include",
       });
       if (!user.ok) {
@@ -42,10 +42,20 @@ export default function NewEntryPage() {
     setLoading(true);
 
     try {
-      //await createEntry({ title, content });
-      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/entries`, {
+      // Get userId from localStorage (set during login/signup)
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        router.push("/login");
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/entries`, {
         method: "POST",
-        body: JSON.stringify({ title, content }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ title, content, userId }),
       });
       if (!response.ok) {
         throw new Error("Failed to create entry");

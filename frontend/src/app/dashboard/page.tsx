@@ -27,7 +27,7 @@ export default function DashboardPage() {
 
         // const data = await getEntries()
         // setEntries(data)
-        const user = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
+        const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
           credentials: "include",
         });
         if (!user.ok) {
