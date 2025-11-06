@@ -15,6 +15,12 @@ export default function NewEntryPage() {
 
   useEffect(() => {
     async function checkAuth() {
+      const user = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
+        credentials: "include",
+      });
+      if (!user.ok) {
+        router.push("/login");
+      }
       //const user = await getCurrentUser();
       // if (!user) {
       // 	router.push("/login");
@@ -37,6 +43,15 @@ export default function NewEntryPage() {
 
     try {
       //await createEntry({ title, content });
+      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/entries`, {
+        method: "POST",
+        body: JSON.stringify({ title, content }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create entry");
+      }
+      const data = await response.json();
+      console.log(data);
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Failed to create entry");
@@ -57,7 +72,7 @@ export default function NewEntryPage() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="max-w-3xl mx-auto px-6 py-12">
+      <main className="max-w-3xl mx-auto px-4 md:px-6 py-12">
         <div className="mb-8">
           <button
             onClick={() => router.back()}
@@ -65,7 +80,7 @@ export default function NewEntryPage() {
           >
             ← Back to entries
           </button>
-          <h1 className="text-4xl font-serif text-dark-brown mb-2">
+          <h1 className="text-3xl md:text-4xl font-serif text-dark-brown mb-2">
             New Entry
           </h1>
           <p className="text-warm-gray text-sm">{displayDate}</p>
@@ -102,7 +117,7 @@ export default function NewEntryPage() {
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="input-field min-h-[400px] resize-y leading-relaxed"
+              className="input-field min-h-[300px] md:min-h-[400px] resize-y leading-relaxed"
               placeholder="Write your thoughts..."
               required
               disabled={loading}
@@ -115,14 +130,14 @@ export default function NewEntryPage() {
             </div>
           )}
 
-          <div className="flex gap-4">
-            <button type="submit" className="btn-primary" disabled={loading}>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button type="submit" className="btn-primary w-full sm:w-auto" disabled={loading}>
               {loading ? "Saving..." : "Save Entry"}
             </button>
             <button
               type="button"
               onClick={() => router.back()}
-              className="btn-secondary"
+              className="btn-secondary w-full sm:w-auto"
               disabled={loading}
             >
               Cancel
