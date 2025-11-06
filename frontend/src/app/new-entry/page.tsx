@@ -15,6 +15,12 @@ export default function NewEntryPage() {
 
   useEffect(() => {
     async function checkAuth() {
+      const user = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
+        credentials: "include",
+      });
+      if (!user.ok) {
+        router.push("/login");
+      }
       //const user = await getCurrentUser();
       // if (!user) {
       // 	router.push("/login");
@@ -37,6 +43,15 @@ export default function NewEntryPage() {
 
     try {
       //await createEntry({ title, content });
+      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/entries`, {
+        method: "POST",
+        body: JSON.stringify({ title, content }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create entry");
+      }
+      const data = await response.json();
+      console.log(data);
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Failed to create entry");
