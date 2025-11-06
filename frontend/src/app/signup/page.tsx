@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLoginStore } from "../zustand/loginContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
 // import { signUp } from '@/lib/supabase/auth'
 
@@ -13,6 +14,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { login } = useLoginStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +47,7 @@ export default function SignupPage() {
       if (data.createdUser?._id) {
         localStorage.setItem("userId", data.createdUser._id);
       }
+      login();
 
       router.push("/dashboard");
     } catch (err: any) {
