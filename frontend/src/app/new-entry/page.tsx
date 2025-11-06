@@ -21,10 +21,6 @@ export default function NewEntryPage() {
       if (!user.ok) {
         router.push("/login");
       }
-      //const user = await getCurrentUser();
-      // if (!user) {
-      // 	router.push("/login");
-      // }
     }
 
     checkAuth();
