@@ -27,16 +27,38 @@ export default function LoginPage() {
   //   }
   // };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to login");
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch (err: any) {
+      setError(err.message || "An error occurred during login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-serif text-dark-brown mb-3">Journal</h1>
+          <h1 className="text-3xl md:text-4xl font-serif text-dark-brown mb-3">Journal</h1>
           <p className="text-warm-gray text-sm">Sign in to your account</p>
         </div>
 
         <div className="card">
-          <form onSubmit={() => console.log("submit")} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
                 htmlFor="email"

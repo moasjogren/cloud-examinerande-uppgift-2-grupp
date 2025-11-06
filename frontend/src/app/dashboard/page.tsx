@@ -27,6 +27,14 @@ export default function DashboardPage() {
 
         // const data = await getEntries()
         // setEntries(data)
+        const user = await fetch (`${process.env.NEXT_PUBLIC_API_URL}/auth/user`, {
+          credentials: "include",
+        });
+        if (!user.ok) {
+          router.push("/login");
+        }
+        const data = await user.json();
+        console.log(data);
       } catch (err: any) {
         setError(err.message || 'Failed to load entries')
       } finally {
@@ -63,16 +71,16 @@ export default function DashboardPage() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="max-w-4xl mx-auto py-12" style={{ paddingLeft: '80px', paddingRight: '80px' }}>
-        <div className="flex items-center justify-between mb-12">
+      <main className="max-w-4xl mx-auto px-4 md:px-8 lg:px-20 py-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
           <div>
-            <h2 className="text-3xl font-serif text-dark-brown mb-2">Your Entries</h2>
+            <h2 className="text-2xl md:text-3xl font-serif text-dark-brown mb-2">Your Entries</h2>
             <p className="text-warm-gray text-sm">
               {/* {entries.length} {entries.length === 1 ? 'entry' : 'entries'} */}
             </p>
           </div>
           <Link href="/new-entry">
-            <button className="btn-primary" style={{ minWidth: '160px' }}>
+            <button className="btn-primary w-full sm:w-auto">
               New Entry
             </button>
           </Link>
