@@ -31,7 +31,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-serif text-dark-brown mb-3">Journal</h1>
+          <h1 className="text-3xl md:text-4xl font-serif text-dark-brown mb-3">Journal</h1>
           <p className="text-warm-gray text-sm">Sign in to your account</p>
         </div>
 
