@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export async function getAllUsers(_req: Request, res: Response) {
   try {
     const users = await User.find().lean();
-    if (users.length === 0) return res.status(404).send("No users found");
+    if (users.length === 0) return res.status(200).send("No users found");
 
     return res.status(200).json({ users });
   } catch (error) {

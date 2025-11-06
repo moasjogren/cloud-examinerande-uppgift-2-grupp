@@ -1,29 +1,29 @@
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./config/db";
 import dotenv from "dotenv";
+
+import { connectDB } from "./config/db";
+
+import userRoutes from "./routes/userRoutes";
+import entryRoutes from "./routes/entryRoutes";
 
 dotenv.config();
 
 const app = express();
+const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.use("/api", userRoutes);
+app.use("/api", entryRoutes);
+
+app.get("/", (_req, res) => {
   res.send("Node.js and Express.js with TypeScript");
 });
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
-};
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-startServer();
+connectDB().catch(console.error);
