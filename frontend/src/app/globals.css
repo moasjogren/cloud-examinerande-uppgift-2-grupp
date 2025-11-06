@@ -1,41 +1,139 @@
 @import "tailwindcss";
 
 @theme {
-	--color-cream: #faf8f3;
-	--color-dark-brown: #3e2723;
-	--color-warm-gray: #8d8d8d;
-	--color-beige: #f5f1e8;
+  --color-cream: #faf8f3;
+  --color-dark-brown: #3e2723;
+  --color-warm-gray: #8d8d8d;
+  --color-beige: #f5f1e8;
+
+  /* Dark mode colors */
+  --color-dark-bg: #1a1410;
+  --color-dark-surface: #2d2419;
+  --color-dark-text: #ffffff;
+  --color-dark-muted: #a89f91;
 }
 
 @layer base {
-	body {
-		@apply bg-cream text-dark-brown;
-	}
+  body {
+    @apply bg-cream text-dark-brown transition-colors;
+  }
 
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		@apply font-serif;
-	}
+  :root.dark body {
+    background-color: var(--color-dark-bg);
+    color: var(--color-dark-text);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
 }
 
 @layer components {
-	.btn-primary {
-		@apply px-6 py-3 bg-dark-brown text-cream rounded-sm hover:bg-warm-gray transition-colors duration-200 font-sans text-sm tracking-wide;
-	}
+  .btn-primary {
+    @apply px-6 py-3 bg-dark-brown text-cream rounded-sm hover:bg-warm-gray transition-colors duration-200 font-sans text-sm tracking-wide;
+  }
 
-	.btn-secondary {
-		@apply px-6 py-3 border border-dark-brown text-dark-brown rounded-sm hover:bg-beige transition-colors duration-200 font-sans text-sm tracking-wide;
-	}
+  .dark .btn-primary {
+    @apply bg-[--color-dark-text] text-[--color-dark-bg] hover:bg-[--color-dark-muted];
+  }
 
-	.input-field {
-		@apply w-full px-4 py-3 border border-warm-gray/30 rounded-sm bg-white focus:outline-none focus:border-dark-brown transition-colors duration-200;
-	}
+  .btn-secondary {
+    @apply px-6 py-3 border border-dark-brown text-dark-brown rounded-sm hover:bg-beige transition-colors duration-200 font-sans text-sm tracking-wide;
+  }
 
-	.card {
-		@apply bg-white border border-warm-gray/20 rounded-sm p-8 shadow-sm;
-	}
+  .dark .btn-secondary {
+    @apply border-[--color-dark-text] text-[--color-dark-text] hover:bg-[--color-dark-surface];
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-warm-gray/30 rounded-sm bg-white focus:outline-none focus:border-dark-brown transition-colors duration-200;
+  }
+
+  .dark .input-field {
+    @apply bg-[--color-dark-surface] border-[--color-dark-muted]/30 focus:border-[--color-dark-text] text-[--color-dark-text];
+  }
+
+  .card {
+    @apply bg-white border border-warm-gray/20 rounded-sm p-8 shadow-sm;
+  }
+
+  .dark .card {
+    @apply bg-[--color-dark-surface] border-[--color-dark-muted]/20;
+  }
+
+  .theme-toggle {
+    @apply p-3 rounded-sm border border-dark-brown/20 text-2xl
+		       hover:bg-beige hover:border-dark-brown/40 
+		       transition-all duration-200 
+		       active:scale-95;
+  }
+
+  .dark .theme-toggle {
+    @apply border-[--color-dark-muted]/30 
+		       hover:bg-[--color-dark-surface] 
+		       hover:border-[--color-dark-muted]/50;
+  }
+
+  .header-component {
+    @apply border-b border-warm-gray/20 bg-white transition-colors;
+  }
+
+  .dark .header-component {
+    background-color: var(--color-dark-surface);
+    border-color: rgba(168, 159, 145, 0.2);
+  }
+
+  .header-title {
+    color: var(--color-dark-brown);
+    transition: color 200ms;
+  }
+
+  .dark .header-title {
+    color: var(--color-dark-text);
+  }
+
+  .header-signout-btn {
+    @apply text-sm text-warm-gray hover:text-dark-brown transition-colors;
+  }
+
+  .dark .header-signout-btn {
+    color: var(--color-dark-muted);
+  }
+
+  .dark .header-signout-btn:hover {
+    color: var(--color-dark-text);
+  }
+
+  .page-title {
+    transition: color 200ms;
+  }
+
+  .dark .page-title {
+    color: var(--color-dark-text) !important;
+  }
+
+  .back-button {
+    transition: color 200ms;
+  }
+
+  .dark .back-button {
+    color: var(--color-dark-muted);
+  }
+
+  .dark .back-button:hover {
+    color: var(--color-dark-text);
+  }
+
+  .form-label {
+    transition: color 200ms;
+  }
+
+  .dark .form-label {
+    color: var(--color-dark-text) !important;
+  }
 }
