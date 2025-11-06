@@ -1,5 +1,6 @@
 import { User } from "../models/userModel";
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 export async function getAllUsers(_req: Request, res: Response) {
   try {
@@ -17,10 +18,22 @@ export async function getAllUsers(_req: Request, res: Response) {
 export async function createUser(req: Request, res: Response) {
   const { email, password, username } = req.body;
   try {
-    const createdUser = await User.create({ username, email, password });
+    // Hasha lösenordet INNAN du skapar användaren
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Skapa användaren med det hashade lösenordet
+    const createdUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
     if (!createdUser) return res.status(400).send("Could not create user");
-    return res.status(201).json({ message: "User created", createdUser });
+
+    return res.status(201).json({
+      message: "User created",
+      createdUser,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -67,5 +80,36 @@ export async function deleteUser(req: Request, res: Response) {
     return res
       .status(500)
       .json({ error, message: "Internal server error deleting user" });
+  }
+}
+
+export async function loginUser(req: Request, res: Response) {
+  const { email, password } = req.body;
+  try {
+    // Hitta användaren via email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Jämför lösenordet med det hashade lösenordet
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Login lyckades - returnera användaren utan lösenord
+    return res.status(200).json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error, message: "Internal server error during login" });
   }
 }
