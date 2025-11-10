@@ -3,15 +3,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
-import EntryCard from '@/components/EntryCard'
+import EntryCard from "@/components/EntryCard";
 // import { getEntries } from '@/lib/supabase/queries'
 // import { getCurrentUser } from '@/lib/supabase/auth'
-import { Entry } from '../types/EntryTypes'
+import { Entry } from "../types/EntryTypes";
 import Link from "next/link";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [entries, setEntries] = useState<Entry[]>([])
+  const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -94,7 +94,7 @@ export default function DashboardPage() {
               Your Entries
             </h2>
             <p className="text-warm-gray text-sm">
-              {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
+              {entries.length} {entries.length === 1 ? "entry" : "entries"}
             </p>
           </div>
           <Link href="/new-entry">
@@ -104,7 +104,9 @@ export default function DashboardPage() {
 
         {entries.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-warm-gray mb-6">You haven't written any entries yet.</p>
+            <p className="text-warm-gray mb-6">
+              You haven't written any entries yet.
+            </p>
             <Link href="/new-entry">
               <button className="btn-secondary">Write your first entry</button>
             </Link>
