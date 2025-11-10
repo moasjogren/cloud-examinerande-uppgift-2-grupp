@@ -15,10 +15,18 @@ export default function NewEntryPage() {
 
   useEffect(() => {
     async function checkAuth() {
-      const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
-        credentials: "include",
-      });
-      if (!user.ok) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (response.status === 401) {
+          router.push("/login");
+        }
+      } catch (error) {
         router.push("/login");
       }
     }
@@ -38,13 +46,6 @@ export default function NewEntryPage() {
     setLoading(true);
 
     try {
-      // Get userId from localStorage (set during login/signup)
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        router.push("/login");
-        return;
-      }
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
         {
@@ -53,7 +54,7 @@ export default function NewEntryPage() {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ title, content, userId }),
+          body: JSON.stringify({ title, content, tags: [] }),
         }
       );
       if (!response.ok) {

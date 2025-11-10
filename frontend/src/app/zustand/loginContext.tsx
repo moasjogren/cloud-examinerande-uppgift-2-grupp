@@ -12,15 +12,9 @@ const loginStore = create(
     (set) => ({
       isLoggedIn: false,
       login: () => {
-        const userLocalStorage = localStorage.getItem('userId');
-        if (userLocalStorage) {
-          set({ isLoggedIn: true });
-        } else {
-          set({ isLoggedIn: false });
-        }
+        set({ isLoggedIn: true });
       },
       logout: () => {
-        localStorage.removeItem('userId');
         set({ isLoggedIn: false });
       },
     }),
