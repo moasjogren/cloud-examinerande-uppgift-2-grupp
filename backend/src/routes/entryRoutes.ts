@@ -14,19 +14,21 @@ import {
   validateEntry,
   validateUpdatedEntry,
 } from "../middleware/validateEntry";
+import authUser from "../middleware/authentication";
 
 const router = Router();
 
-router.get("/entries", getAllEntries);
-router.post("/entries", validateEntry, createEntry);
-router.get("/entries/user/:id", validateUserId, getAllEntriesByUser);
-router.get("/entries/:id", validateEntryId, getEntryById);
+router.get("/entries", authUser, getAllEntries);
+router.post("/entries", authUser, validateEntry, createEntry);
+router.get("/entries/user/:id", authUser, validateUserId, getAllEntriesByUser);
+router.get("/entries/:id", authUser, validateEntryId, getEntryById);
 router.patch(
   "/entries/:id",
+  authUser,
   validateEntryId,
   validateUpdatedEntry,
   updateEntry
 );
-router.delete("/entries/:id", validateEntryId, deleteEntry);
+router.delete("/entries/:id", authUser, validateEntryId, deleteEntry);
 
 export default router;

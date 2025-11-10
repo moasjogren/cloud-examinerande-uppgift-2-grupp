@@ -1,11 +1,23 @@
 import { Entry } from "../models/entryModel";
 import { Request, Response } from "express";
 
-export async function getAllEntries(_req: Request, res: Response) {
-  try {
-    const entries = await Entry.find();
+interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+  };
+}
 
-    if (entries.length === 0) return res.status(200).send("No entries found");
+export async function getAllEntries(req: AuthenticatedRequest, res: Response) {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const entries = await Entry.find({ userId });
+
+    if (entries.length === 0) return res.status(200).json([]);
 
     return res.status(200).json(entries);
   } catch (error) {
@@ -29,13 +41,26 @@ export async function getEntryById(req: Request, res: Response) {
   }
 }
 
-export async function getAllEntriesByUser(req: Request, res: Response) {
+export async function getAllEntriesByUser(
+  req: AuthenticatedRequest,
+  res: Response
+) {
   const { id } = req.params;
 
   try {
+    const requesterId = req.user?.id;
+
+    if (!requesterId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    if (requesterId !== id) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     const entries = await Entry.find({ userId: id });
 
-    if (entries.length === 0) return res.status(200).send("No entries found");
+    if (entries.length === 0) return res.status(200).json([]);
 
     return res.status(200).json(entries);
   } catch (error) {
@@ -45,11 +70,23 @@ export async function getAllEntriesByUser(req: Request, res: Response) {
   }
 }
 
-export async function createEntry(req: Request, res: Response) {
-  const { title, content, tags, userId } = req.body;
+export async function createEntry(req: AuthenticatedRequest, res: Response) {
+  const { title, content, tags } = req.body;
+  const userId = req.user?.id;
 
   try {
-    const entry = await Entry.create({ title, content, tags, userId });
+    if (!userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const normalizedTags = Array.isArray(tags) ? tags : [];
+
+    const entry = await Entry.create({
+      title,
+      content,
+      tags: normalizedTags,
+      userId,
+    });
 
     if (!entry) return res.status(400).send("Could not create entry");
 

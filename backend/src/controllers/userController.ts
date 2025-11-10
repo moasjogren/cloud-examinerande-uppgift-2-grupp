@@ -1,6 +1,7 @@
 import { User } from "../models/userModel";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 export async function getAllUsers(_req: Request, res: Response) {
   try {
@@ -98,6 +99,19 @@ export async function loginUser(req: Request, res: Response) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+    const token = jwt.sign(
+      {sub: user.id, email: user.email},
+      process.env.JWT_SECRET as string,
+      {expiresIn: "1h"}
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000
+    })
+
     // Login lyckades - returnera användaren utan lösenord
     return res.status(200).json({
       message: "Login successful",
@@ -105,6 +119,7 @@ export async function loginUser(req: Request, res: Response) {
         _id: user._id,
         email: user.email,
         username: user.username,
+        token
       },
     });
   } catch (error) {
@@ -112,4 +127,20 @@ export async function loginUser(req: Request, res: Response) {
       .status(500)
       .json({ error, message: "Internal server error during login" });
   }
+}
+
+export async function logoutUser(req: Request, res: Response) {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production"
+    });
+    return res.status(200).json({ message: "Logged out" });
+  } catch (error) {
+    return res
+    .status(500)
+    .json({ error, message: "Internal server error during logout" });
+  }
+   
 }

@@ -11,6 +11,18 @@ export default function Header() {
 
   const handleSignOut = async () => {
     try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to sign out");
+      }
+
       logout();
       router.push("/login");
     } catch (error) {

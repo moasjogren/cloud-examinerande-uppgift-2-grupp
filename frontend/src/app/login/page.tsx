@@ -21,12 +21,15 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Get all users and find the one with matching email
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/login`,
         {
-          method: "GET",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           credentials: "include",
+          body: JSON.stringify({ email, password }),
         }
       );
       if (!response.ok) {
@@ -34,26 +37,13 @@ export default function LoginPage() {
       }
       const data = await response.json();
 
-      // Find user with matching email
-      const users = data.users || [];
-      const user = users.find((u: any) => u.email === email);
-
-      if (!user) {
+      const user = data.user;
+      if (!user?._id) {
         throw new Error("Invalid email or password");
       }
 
-      // Note: In production, password should be verified on backend
-      // For now, we just check if user exists
-      if (user.password !== password) {
-        throw new Error("Invalid email or password");
-      }
-
-      // Save userId to localStorage
-      if (user._id) {
-        localStorage.setItem("userId", user._id);
-        // Update login state in zustand store
-        login();
-      }
+      // Update login state in zustand store
+      login();
 
       router.push("/dashboard");
     } catch (err: any) {

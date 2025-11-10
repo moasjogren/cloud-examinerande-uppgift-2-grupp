@@ -18,46 +18,38 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        // Get userId from localStorage
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-          router.push("/login");
-          return;
-        }
-
-        // Get entries for this user
+        // Get entries for the authenticated user
         const entriesResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/entries/user/${userId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
           {
             credentials: "include",
           }
         );
-        
-        if (entriesResponse.ok) {
-          const contentType = entriesResponse.headers.get("content-type");
-          if (contentType && contentType.includes("application/json")) {
-            const entriesData = await entriesResponse.json();
-            if (Array.isArray(entriesData)) {
-              const mappedEntries = entriesData.map((entry: any) => ({
-                id: entry._id || entry.id,
-                title: entry.title,
-                content: entry.content,
-                tags: entry.tags || [],
-                userId: entry.userId,
-                createdAt: entry.createdAt || entry.created_at,
-                updatedAt: entry.updatedAt || entry.updated_at,
-              }));
-              setEntries(mappedEntries);
-            } else {
-              setEntries([]);
-            }
-          } else {
-            // Backend returned "No entries found" as plain text - just set empty array
-            const textData = await entriesResponse.text();
-            if (textData === "No entries found") {
-              setEntries([]);
-            }
-          }
+
+        if (entriesResponse.status === 401) {
+          router.push("/login");
+          return;
+        }
+
+        if (!entriesResponse.ok) {
+          throw new Error("Failed to load entries");
+        }
+
+        const entriesData = await entriesResponse.json();
+
+        if (Array.isArray(entriesData)) {
+          const mappedEntries = entriesData.map((entry: any) => ({
+            id: entry._id || entry.id,
+            title: entry.title,
+            content: entry.content,
+            tags: entry.tags || [],
+            userId: entry.userId,
+            createdAt: entry.createdAt || entry.created_at,
+            updatedAt: entry.updatedAt || entry.updated_at,
+          }));
+          setEntries(mappedEntries);
+        } else {
+          setEntries([]);
         }
       } catch (err: any) {
         setError(err.message || "Failed to load entries");

@@ -22,6 +22,10 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
         {
@@ -40,13 +44,30 @@ export default function SignupPage() {
       if (!response.ok) {
         throw new Error("Failed to signup");
       }
-      const data = await response.json();
-      console.log(data);
 
-      // Save userId to localStorage
-      if (data.createdUser?._id) {
-        localStorage.setItem("userId", data.createdUser._id);
+      const loginResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      if (!loginResponse.ok) {
+        throw new Error("Account created, but login failed");
       }
+
+      const loginData = await loginResponse.json();
+
+      const user = loginData.user;
+      if (!user?._id) {
+        throw new Error("Account created, but login failed");
+      }
+
       login();
 
       router.push("/dashboard");

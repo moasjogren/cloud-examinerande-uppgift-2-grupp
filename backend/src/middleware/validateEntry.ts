@@ -20,6 +20,7 @@ const entryRules: EntryRules = {
     .isLength({ min: 3 })
     .withMessage("Entry content must be at least 3 characters"),
   tags: body("tags")
+    .optional()
     .isArray({ min: 0 })
     .withMessage("Tags must be an array")
     .custom((tags) => tags.every((tag: any) => typeof tag === "string"))
