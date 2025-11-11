@@ -189,4 +189,47 @@
   .dark .auth-link:hover {
     color: var(--color-dark-text) !important;
   }
+
+  /* Reaction buttons */
+  .reaction-btn {
+    @apply relative px-3 py-2 border border-warm-gray/30 rounded-full bg-transparent cursor-pointer transition-all duration-200 flex items-center gap-1;
+  }
+
+  .reaction-btn:hover {
+    @apply bg-beige transform scale-110;
+  }
+
+  .dark .reaction-btn {
+    @apply border-[rgba(168,159,145,0.3)];
+  }
+
+  .dark .reaction-btn:hover {
+    background-color: var(--color-dark-surface);
+  }
+
+  .reaction-btn.active {
+    background-color: var(--color-dark-brown);
+    border-color: var(--color-dark-brown);
+  }
+
+  .dark .reaction-btn.active {
+    background-color: var(--color-dark-text);
+  }
+
+  .reaction-count {
+    @apply text-xs font-semibold;
+    color: var(--color-dark-brown);
+  }
+
+  .dark .reaction-count {
+    color: var(--color-dark-text);
+  }
+
+  .reaction-btn.active .reaction-count {
+    color: var(--color-cream);
+  }
+
+  .dark .reaction-btn.active .reaction-count {
+    color: var(--color-dark-bg);
+  }
 }
