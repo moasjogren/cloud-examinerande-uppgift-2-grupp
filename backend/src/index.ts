@@ -7,6 +7,7 @@ import { connectDB } from "./config/db";
 
 import userRoutes from "./routes/userRoutes";
 import entryRoutes from "./routes/entryRoutes";
+import searchRoutes from "./routes/searchRoutes";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 
 app.use("/api", userRoutes);
 app.use("/api", entryRoutes);
+app.use("/api", searchRoutes);
 
 app.get("/", (_req, res) => {
   res.send("Node.js and Express.js with TypeScript");
