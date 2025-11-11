@@ -6,7 +6,8 @@ interface EntriesState {
   loading: boolean;
   error: string | null;
   setEntries: (entries: Entry[]) => void;
-  addEntry: (entry: Entry[]) => void;
+  addEntry: (entry: Entry) => void;
+  editEntry: (entryId: string, updatedEntry: Partial<Entry>) => void;
   deleteEntry: (entryId: string) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -23,6 +24,13 @@ export const useEntriesStore = create<EntriesState>((set) => ({
   addEntry: (entry) =>
     set((state) => ({
       entries: [...state.entries, entry] as Entry[],
+    })),
+
+  editEntry: (entryId, updatedEntry) =>
+    set((state) => ({
+      entries: state.entries.map((entry) =>
+        entry.id === entryId ? { ...entry, ...updatedEntry } : entry
+      ),
     })),
 
   deleteEntry: (entryId) =>

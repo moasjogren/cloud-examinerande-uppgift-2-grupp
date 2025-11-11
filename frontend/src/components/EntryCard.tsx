@@ -6,7 +6,38 @@ interface EntryCardProps {
 }
 
 export default function EntryCard({ entry }: EntryCardProps) {
+  const editEntry = useEntriesStore((state) => state.editEntry);
   const deleteEntry = useEntriesStore((state) => state.deleteEntry);
+
+  // async function handleEdit() {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${entry.id}`,
+  //       {
+  //         method: "PATCH",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         credentials: "include",
+  //         body: JSON.stringify({ title: newTitle, content: newContent }),
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to update entry");
+  //     }
+
+  //     const data = await response.json();
+
+  //     editEntry(entry.id, {
+  //       title: data.title,
+  //       content: data.content,
+  //       updatedAt: data.updatedAt,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error updating entry:", error);
+  //   }
+  // }
 
   async function handleDelete() {
     try {

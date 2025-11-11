@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
-// import { createEntry } from "@/lib/supabase/queries";
-// import { getCurrentUser } from "@/lib/supabase/auth";
 
 export default function NewEntryPage() {
   const router = useRouter();
