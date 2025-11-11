@@ -1,40 +1,51 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { useEntriesStore } from "../zustand/entiresStore";
+import { useEntriesStore } from "../../zustand/entiresStore";
 import Header from "@/components/Header";
 
-export default function NewEntryPage() {
+export default function EditEntryPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const router = useRouter();
-  const addEntry = useEntriesStore((state) => state.addEntry);
-
+  const { id } = use(params);
+  const { entries, editEntry } = useEntriesStore();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function checkAuth() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
-          {
-            credentials: "include",
-          }
-        );
-
-        if (response.status === 401) {
-          router.push("/login");
-        }
-      } catch (error) {
-        router.push("/login");
-      }
+    const entry = entries.find((e) => e.id === id);
+    if (entry) {
+      setTitle(entry.title);
+      setContent(entry.content);
+    } else {
+      fetchEntry();
     }
+  }, [id, entries]);
 
-    checkAuth();
-  }, [router]);
+  const fetchEntry = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${id}`,
+        { credentials: "include" }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to load entry");
+      }
+
+      const data = await response.json();
+      setTitle(data.title);
+      setContent(data.content);
+    } catch (error) {
+      console.error("Error fetching entry:", error);
+      router.push("/dashboard");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,43 +58,34 @@ export default function NewEntryPage() {
 
     setLoading(true);
 
-    const tagsArray = tags
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0);
-
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${id}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ title, content, tags: tagsArray }),
+          body: JSON.stringify({ title, content }),
         }
       );
+
       if (!response.ok) {
-        throw new Error("Failed to create entry");
+        throw new Error("Failed to update entry");
       }
+
       const data = await response.json();
 
-      const newEntry = {
-        id: data._id || data.id,
+      editEntry(id, {
         title: data.title,
         content: data.content,
-        tags: data.tags || [],
-        userId: data.userId,
-        createdAt: data.createdAt || data.created_at,
-        updatedAt: data.updatedAt || data.updated_at,
-      };
-
-      addEntry(newEntry);
+        updatedAt: data.updatedAt,
+      });
 
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Failed to create entry");
+    } catch (error: any) {
+      setError(error.message || "Failed to update entry");
       setLoading(false);
     }
   };
@@ -109,11 +111,10 @@ export default function NewEntryPage() {
             ← Back to entries
           </button>
           <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-2">
-            New Entry
+            Edit Entry
           </h1>
           <p className="text-warm-gray text-sm">{displayDate}</p>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
@@ -152,40 +153,6 @@ export default function NewEntryPage() {
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="tags"
-              className="form-label block text-sm mb-2 text-dark-brown font-medium"
-            >
-              Tags
-            </label>
-            <input
-              id="tags"
-              type="text"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              className="input-field"
-              placeholder="Add tags separated by comma..."
-              disabled={loading}
-            />
-            {tags && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {tags
-                  .split(",")
-                  .map((tag) => tag.trim())
-                  .filter((tag) => tag.length > 0)
-                  .map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-block bg-warm-gray/20 px-3 py-1 mt-2 rounded-full text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-              </div>
-            )}
-          </div>
-
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-sm text-sm">
               {error}
@@ -198,7 +165,7 @@ export default function NewEntryPage() {
               className="btn-primary w-full sm:w-auto"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save Entry"}
+              {loading ? "Saving..." : "Update Entry"}
             </button>
             <button
               type="button"

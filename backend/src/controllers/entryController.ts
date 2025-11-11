@@ -1,5 +1,6 @@
 import { Entry } from "../models/entryModel";
 import { Request, Response } from "express";
+import { generateEmbedding } from "../services/embedding";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -80,12 +81,15 @@ export async function createEntry(req: AuthenticatedRequest, res: Response) {
     }
 
     const normalizedTags = Array.isArray(tags) ? tags : [];
+    const combinedText = `${title} ${content} ${normalizedTags.join(" ")}`;
+    const embedding = await generateEmbedding(combinedText);
 
     const entry = await Entry.create({
       title,
       content,
       tags: normalizedTags,
       userId,
+      embedding,
     });
 
     if (!entry) return res.status(400).send("Could not create entry");
@@ -101,10 +105,27 @@ export async function createEntry(req: AuthenticatedRequest, res: Response) {
 export async function updateEntry(req: Request, res: Response) {
   const { id } = req.params;
   const { title, content, tags } = req.body;
-  const input: any = { title, content, tags };
+  //   const input: any = { title, content, tags };
 
   try {
-    const updatedEntry = await Entry.findByIdAndUpdate(id, input, {
+    let updateData: any = {};
+    if (title !== undefined) updateData.title = title;
+    if (content !== undefined) updateData.content = content;
+    if (tags !== undefined) updateData.tags = tags;
+
+    //Regenererar embedding om innehållet ändras
+    if (title !== undefined || content !== undefined || tags !== undefined) {
+      const entry = await Entry.findById(id);
+      if (entry) {
+        const combinedText = `${title || entry.title} ${
+          content || entry.content
+        } ${(tags || entry.tags).join(" ")}`;
+
+        updateData.embedding = await generateEmbedding(combinedText);
+      }
+    }
+
+    const updatedEntry = await Entry.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 

@@ -1,45 +1,24 @@
+import { useRouter } from "next/navigation";
 import { useEntriesStore } from "@/app/zustand/entiresStore";
 import { Entry } from "../app/types/EntryTypes";
+import { EntryReactions } from "./EntryReactions";
 
 interface EntryCardProps {
   entry: Entry;
 }
 
 export default function EntryCard({ entry }: EntryCardProps) {
-  const editEntry = useEntriesStore((state) => state.editEntry);
+  const router = useRouter();
   const deleteEntry = useEntriesStore((state) => state.deleteEntry);
 
-  // async function handleEdit() {
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${entry.id}`,
-  //       {
-  //         method: "PATCH",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //         body: JSON.stringify({ title: newTitle, content: newContent }),
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to update entry");
-  //     }
-
-  //     const data = await response.json();
-
-  //     editEntry(entry.id, {
-  //       title: data.title,
-  //       content: data.content,
-  //       updatedAt: data.updatedAt,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error updating entry:", error);
-  //   }
-  // }
+  function handleEdit() {
+    router.push(`/edit-entry/${entry.id}`);
+  }
 
   async function handleDelete() {
+    if (!confirm("Are you sure you want to delete this entry?")) {
+      return;
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${entry.id}`,
@@ -84,9 +63,14 @@ export default function EntryCard({ entry }: EntryCardProps) {
           <p className="text-dark-brown/80 [html.dark_&]:text-cream/80 leading-relaxed whitespace-pre-wrap">
             {entry.content}
           </p>
+
+          {/* Reaction buttons */}
+          <EntryReactions entryId={entry.id} />
         </div>
         <div className="flex gap-5 mt-5 h-10">
-          <button className="btn-primary w-full sm:w-auto">Edit</button>
+          <button onClick={handleEdit} className="btn-primary w-full sm:w-auto">
+            Edit
+          </button>
           <button
             onClick={handleDelete}
             className="btn-primary w-full sm:w-auto"
