@@ -1,36 +1,51 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
+import { useEntriesStore } from "../../zustand/entiresStore";
 import Header from "@/components/Header";
 
-export default function NewEntryPage() {
+export default function EditEntryPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const router = useRouter();
+  const { id } = use(params);
+  const { entries, editEntry } = useEntriesStore();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function checkAuth() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
-          {
-            credentials: "include",
-          }
-        );
-
-        if (response.status === 401) {
-          router.push("/login");
-        }
-      } catch (error) {
-        router.push("/login");
-      }
+    const entry = entries.find((e) => e.id === id);
+    if (entry) {
+      setTitle(entry.title);
+      setContent(entry.content);
+    } else {
+      fetchEntry();
     }
+  }, [id, entries]);
 
-    checkAuth();
-  }, [router]);
+  const fetchEntry = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${id}`,
+        { credentials: "include" }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to load entry");
+      }
+
+      const data = await response.json();
+      setTitle(data.title);
+      setContent(data.content);
+    } catch (error) {
+      console.error("Error fetching entry:", error);
+      router.push("/dashboard");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,24 +60,32 @@ export default function NewEntryPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${id}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ title, content, tags: [] }),
+          body: JSON.stringify({ title, content }),
         }
       );
+
       if (!response.ok) {
-        throw new Error("Failed to create entry");
+        throw new Error("Failed to update entry");
       }
+
       const data = await response.json();
-      console.log(data);
+
+      editEntry(id, {
+        title: data.title,
+        content: data.content,
+        updatedAt: data.updatedAt,
+      });
+
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Failed to create entry");
+    } catch (error: any) {
+      setError(error.message || "Failed to update entry");
       setLoading(false);
     }
   };
@@ -88,11 +111,10 @@ export default function NewEntryPage() {
             ← Back to entries
           </button>
           <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-2">
-            New Entry
+            Edit Entry
           </h1>
           <p className="text-warm-gray text-sm">{displayDate}</p>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
@@ -143,7 +165,7 @@ export default function NewEntryPage() {
               className="btn-primary w-full sm:w-auto"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save Entry"}
+              {loading ? "Saving..." : "Update Entry"}
             </button>
             <button
               type="button"
