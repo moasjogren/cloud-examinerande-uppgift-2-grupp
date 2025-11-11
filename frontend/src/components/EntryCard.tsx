@@ -1,5 +1,6 @@
 import { useEntriesStore } from "@/app/zustand/entiresStore";
 import { Entry } from "../app/types/EntryTypes";
+import { EntryReactions } from "./EntryReactions";
 
 interface EntryCardProps {
   entry: Entry;
@@ -84,6 +85,9 @@ export default function EntryCard({ entry }: EntryCardProps) {
           <p className="text-dark-brown/80 [html.dark_&]:text-cream/80 leading-relaxed whitespace-pre-wrap">
             {entry.content}
           </p>
+
+          {/* Reaction buttons */}
+          <EntryReactions entryId={entry.id} />
         </div>
         <div className="flex gap-5 mt-5 h-10">
           <button className="btn-primary w-full sm:w-auto">Edit</button>

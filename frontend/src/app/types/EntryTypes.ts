@@ -6,6 +6,12 @@ type Entry = {
     userId: string;
     createdAt: Date;
     updatedAt: Date;
+    reactions?:{
+        happy: number;
+        sad: number;
+        angry: number;
+        thoughtful: number;
+    }
 }
 
 export type { Entry };
