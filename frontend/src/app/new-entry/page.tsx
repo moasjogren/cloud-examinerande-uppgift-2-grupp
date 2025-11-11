@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEntriesStore } from "../zustand/entiresStore";
 import Header from "@/components/Header";
 
 export default function NewEntryPage() {
   const router = useRouter();
+  const addEntry = useEntriesStore((state) => state.addEntry);
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [tags, setTags] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -43,6 +47,11 @@ export default function NewEntryPage() {
 
     setLoading(true);
 
+    const tagsArray = tags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
@@ -52,14 +61,26 @@ export default function NewEntryPage() {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ title, content, tags: [] }),
+          body: JSON.stringify({ title, content, tags: tagsArray }),
         }
       );
       if (!response.ok) {
         throw new Error("Failed to create entry");
       }
       const data = await response.json();
-      console.log(data);
+
+      const newEntry = {
+        id: data._id || data.id,
+        title: data.title,
+        content: data.content,
+        tags: data.tags || [],
+        userId: data.userId,
+        createdAt: data.createdAt || data.created_at,
+        updatedAt: data.updatedAt || data.updated_at,
+      };
+
+      addEntry(newEntry);
+
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Failed to create entry");
@@ -129,6 +150,40 @@ export default function NewEntryPage() {
               required
               disabled={loading}
             />
+          </div>
+
+          <div>
+            <label
+              htmlFor="tags"
+              className="form-label block text-sm mb-2 text-dark-brown font-medium"
+            >
+              Tags
+            </label>
+            <input
+              id="tags"
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              className="input-field"
+              placeholder="Add tags separated by comma..."
+              disabled={loading}
+            />
+            {tags && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {tags
+                  .split(",")
+                  .map((tag) => tag.trim())
+                  .filter((tag) => tag.length > 0)
+                  .map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-block bg-warm-gray/20 px-3 py-1 mt-2 rounded-full text-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+              </div>
+            )}
           </div>
 
           {error && (
