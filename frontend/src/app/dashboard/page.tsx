@@ -1,73 +1,32 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import EntryCard from "@/components/EntryCard";
 import { useEntriesStore } from "../zustand/entiresStore";
-
-// import { Entry } from "../types/EntryTypes";
-// import { useState } from "react";
-// import { useRouter } from "next/navigation";
-
-// Har kommenterat ut den gamla versionen av fetch, loading och error. Ny version med Zustand som funkar finns under utkommenterad kod.
+import SemanticSearchBar from "@/components/Search";
 
 export default function DashboardPage() {
   const { entries, loading, error, fetchEntries } = useEntriesStore();
-  // const router = useRouter();
-  // const [entries, setEntries] = useState<Entry[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   async function loadData() {
-  //     try {
-  //       // Get entries for the authenticated user
-  //       const entriesResponse = await fetch(
-  //         `${process.env.NEXT_PUBLIC_API_URL}/api/entries`,
-  //         {
-  //           credentials: "include",
-  //         }
-  //       );
-
-  //       if (entriesResponse.status === 401) {
-  //         router.push("/login");
-  //         return;
-  //       }
-
-  //       if (!entriesResponse.ok) {
-  //         throw new Error("Failed to load entries");
-  //       }
-
-  //       const entriesData = await entriesResponse.json();
-
-  //       if (Array.isArray(entriesData)) {
-  //         const mappedEntries = entriesData.map((entry: any) => ({
-  //           id: entry._id || entry.id,
-  //           title: entry.title,
-  //           content: entry.content,
-  //           tags: entry.tags || [],
-  //           userId: entry.userId,
-  //           createdAt: entry.createdAt || entry.created_at,
-  //           updatedAt: entry.updatedAt || entry.updated_at,
-  //         }));
-  //         setEntries(mappedEntries);
-  //       } else {
-  //         setEntries([]);
-  //       }
-  //     } catch (err: any) {
-  //       setError(err.message || "Failed to load entries");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   loadData();
-  // }, [router]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     fetchEntries();
   }, [fetchEntries]);
+
+  const handleSearchResults = (results: any[]) => {
+    setSearchResults(results);
+    setIsSearching(results.length > 0);
+  };
+
+  const handleClearSearch = () => {
+    setSearchResults([]);
+    setIsSearching(false);
+  };
+
+  const displayEntries = isSearching ? searchResults : entries;
 
   if (loading) {
     return (
@@ -95,7 +54,7 @@ export default function DashboardPage() {
     <div className="min-h-screen">
       <Header />
       <main className="max-w-4xl mx-auto px-4 md:px-8 lg:px-20 py-12">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h2 className="page-title text-2xl md:text-3xl font-serif text-dark-brown mb-2">
               Your Entries
@@ -109,19 +68,51 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {entries.length === 0 ? (
+        <div className="mb-8">
+          <SemanticSearchBar onResults={handleSearchResults} />
+        </div>
+
+        {isSearching && (
+          <div className="mb-4 flex items-center justify-between">
+            <p className="text-sm text-warm-gray">
+              Found {searchResults.length} relevant{" "}
+              {searchResults.length === 1 ? "entry" : "entries"}
+            </p>
+            <button
+              onClick={handleClearSearch}
+              className="text-sm text-dark-brown hover:underline"
+            >
+              Show all entries
+            </button>
+          </div>
+        )}
+
+        {displayEntries.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-warm-gray mb-6">
-              You haven't written any entries yet.
+              {isSearching
+                ? "No entries found matching your search."
+                : "You haven't written any entries yet."}
             </p>
-            <Link href="/new-entry">
-              <button className="btn-secondary">Write your first entry</button>
-            </Link>
+            {!isSearching && (
+              <Link href="/new-entry">
+                <button className="btn-secondary">
+                  Write your first entry
+                </button>
+              </Link>
+            )}
           </div>
         ) : (
           <div className="space-y-8">
-            {entries.map((entry) => (
-              <EntryCard key={entry.id} entry={entry} />
+            {displayEntries.map((entry) => (
+              <div key={entry.id || entry._id}>
+                <EntryCard entry={entry} />
+                {entry.relevanceScore && (
+                  <div className="mt-2 text-xs text-warm-gray">
+                    Relevance: {Math.round(entry.relevanceScore * 100)}%
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         )}
