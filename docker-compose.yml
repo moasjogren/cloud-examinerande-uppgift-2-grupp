@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: journal-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: journal-backend
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${BACKEND_PORT:-5001}
+      MONGODB_URI:
+      JWT_SECRET: 
+    ports:
+      - "${BACKEND_PORT:-5001}:5001"
+
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: ./frontend
+    container_name: journal-frontend
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://backend:5001}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+
+volumes:
+  mongo-data:
+    driver: local
