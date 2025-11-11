@@ -1,6 +1,5 @@
 "use client";
 
-//import { signOut } from '@/lib/supabase/auth'
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useLoginStore } from "../app/zustand/loginContext";

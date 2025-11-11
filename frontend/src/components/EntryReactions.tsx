@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-
-//interface för reaktionstyperna 
+//interface för reaktionstyperna
 interface Reactions {
   happy: number;
   sad: number;
@@ -16,7 +15,7 @@ interface EntryReactionsProps {
 }
 //komponent för att hantera reaktionerna på inläggen
 export function EntryReactions({ entryId }: EntryReactionsProps) {
-    //state för för reaktionerna och använderna reaktioner. startvärde är 0 för alla reaktioner
+  //state för för reaktionerna och använderna reaktioner. startvärde är 0 för alla reaktioner
   const [reactions, setReactions] = useState<Reactions>({
     happy: 0,
     sad: 0,
@@ -40,7 +39,7 @@ export function EntryReactions({ entryId }: EntryReactionsProps) {
       setUserReactions(savedUserReaction as keyof Reactions);
     }
   }, [entryId]);
-    //hanterar när användaren klickar på en reaktionsknapp
+  //hanterar när användaren klickar på en reaktionsknapp
   const handleReaction = (type: keyof Reactions) => {
     setReactions((prev) => {
       const newReactions = { ...prev };
@@ -88,7 +87,7 @@ export function EntryReactions({ entryId }: EntryReactionsProps) {
   ];
   //renderar knapparna med rätt klasser beroende på om användaren har reagerat eller inte
   return (
-    <div className="flex gap-2 mt-4">
+    <div className="flex gap-2 w-fit mt-4 mb-[-40px]">
       {reactionButtons.map(({ type, emoji, label }) => (
         <button
           key={type}
@@ -97,7 +96,7 @@ export function EntryReactions({ entryId }: EntryReactionsProps) {
           title={label}
         >
           <span className="text-xl">{emoji}</span>
-        {/* {visar antal reaktioner om det är större än 0} */}
+          {/* {visar antal reaktioner om det är större än 0} */}
           {reactions[type] > 0 && (
             <span className="reaction-count">{reactions[type]}</span>
           )}

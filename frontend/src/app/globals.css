@@ -192,7 +192,7 @@
 
   /* Reaction buttons */
   .reaction-btn {
-    @apply relative px-3 py-2 border border-warm-gray/30 rounded-full bg-transparent cursor-pointer transition-all duration-200 flex items-center gap-1;
+    @apply relative px-3 py-2 border border-warm-gray/30 rounded-full bg-dark-brown/80 cursor-pointer transition-all duration-200 flex items-center gap-1;
   }
 
   .reaction-btn:hover {
