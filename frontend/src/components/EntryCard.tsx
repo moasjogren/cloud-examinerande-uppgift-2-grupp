@@ -1,3 +1,4 @@
+import { useEntriesStore } from "@/app/zustand/entiresStore";
 import { Entry } from "../app/types/EntryTypes";
 
 interface EntryCardProps {
@@ -5,8 +6,9 @@ interface EntryCardProps {
 }
 
 export default function EntryCard({ entry }: EntryCardProps) {
+  const deleteEntry = useEntriesStore((state) => state.deleteEntry);
+
   async function handleDelete() {
-    console.log(entry.id);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/entries/${entry.id}`,
@@ -21,9 +23,11 @@ export default function EntryCard({ entry }: EntryCardProps) {
       if (!response.ok) {
         throw new Error("Failed to delete entry");
       }
-    } catch (error) {}
 
-    console.log(entry.title);
+      deleteEntry(entry.id);
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+    }
   }
 
   const formattedDate = new Date(entry.createdAt).toLocaleDateString("en-GB", {
@@ -53,7 +57,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
         <div className="flex gap-5 mt-5 h-10">
           <button className="btn-primary w-full sm:w-auto">Edit</button>
           <button
-            onClick={() => handleDelete()}
+            onClick={handleDelete}
             className="btn-primary w-full sm:w-auto"
           >
             Delete

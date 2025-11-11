@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { Entry } from "../types/EntryTypes";
-import { error } from "console";
 
 interface EntriesState {
   entries: Entry[];
