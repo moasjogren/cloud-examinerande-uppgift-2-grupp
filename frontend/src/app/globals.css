@@ -78,15 +78,14 @@
   }
 
   .theme-toggle {
-    @apply p-3 rounded-sm border border-dark-brown/20 text-2xl
-		       hover:bg-beige hover:border-dark-brown/40 
+    @apply p-2 rounded-sm  text-2xl
+		       hover:bg-beige
 		       transition-all duration-200 
 		       active:scale-95;
   }
 
   .dark .theme-toggle {
-    @apply border-[--color-dark-muted]/30 
-		       hover:bg-[--color-dark-surface] 
+    @apply hover:bg-[--color-dark-surface] 
 		       hover:border-[--color-dark-muted]/50;
   }
 
@@ -231,5 +230,13 @@
 
   .dark .reaction-btn.active .reaction-count {
     color: var(--color-dark-bg);
+  }
+
+  .tags {
+    @apply inline-block bg-beige px-3 py-1 mt-2 rounded-full text-sm;
+  }
+
+  .dark .tags {
+    @apply bg-dark-brown/80;
   }
 }

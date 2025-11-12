@@ -171,22 +171,6 @@ export default function NewEntryPage() {
               autoComplete="off"
               disabled={loading}
             />
-            {/* {tags && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {tags
-                  .split(",")
-                  .map((tag) => tag.trim())
-                  .filter((tag) => tag.length > 0)
-                  .map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-block bg-warm-gray/20 px-3 py-1 mt-2 rounded-full text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-              </div>
-            )} */}
           </div>
 
           {error && (
@@ -206,7 +190,7 @@ export default function NewEntryPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="btn-secondary w-full sm:w-auto"
+              className="btn-primary w-full sm:w-auto"
               disabled={loading}
             >
               Cancel

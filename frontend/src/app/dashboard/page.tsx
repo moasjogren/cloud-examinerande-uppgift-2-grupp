@@ -7,7 +7,6 @@ import EntryCard from "@/components/EntryCard";
 import { useEntriesStore } from "../zustand/entiresStore";
 import SemanticSearchBar from "@/components/Search";
 
-
 export default function DashboardPage() {
   const { entries, loading, error, fetchEntries } = useEntriesStore();
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -81,7 +80,7 @@ export default function DashboardPage() {
             </p>
             <button
               onClick={handleClearSearch}
-              className="text-sm text-dark-brown hover:underline"
+              className="text-sm text-warm-gray hover:underline"
             >
               Show all entries
             </button>
@@ -109,7 +108,7 @@ export default function DashboardPage() {
               <div key={entry.id || entry._id}>
                 <EntryCard entry={entry} />
                 {entry.relevanceScore && (
-                  <div className="mt-2 text-xs text-warm-gray">
+                  <div className="mt-8 text-xs text-warm-gray">
                     Relevance: {Math.round(entry.relevanceScore * 100)}%
                   </div>
                 )}

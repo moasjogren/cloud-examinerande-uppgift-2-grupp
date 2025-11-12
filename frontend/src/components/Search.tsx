@@ -53,10 +53,11 @@ export default function SemanticSearchBar({
     }
   };
 
-  const handleClear = () => {
-    setQuery("");
-    onResults([]);
-  };
+  // Finns redan en annan knapp för samma sak
+  // const handleClear = () => {
+  //   setQuery("");
+  //   onResults([]);
+  // };
 
   return (
     <div className="card">
@@ -77,15 +78,15 @@ export default function SemanticSearchBar({
         >
           {loading ? "Searching..." : "Search"}
         </button>
-        {query && (
+        {/* {query && (
           <button
             onClick={handleClear}
-            className="btn-secondary"
+            className="btn-primary"
             disabled={loading}
           >
             Clear
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );
