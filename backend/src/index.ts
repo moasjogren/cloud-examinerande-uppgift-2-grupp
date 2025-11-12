@@ -19,7 +19,7 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = [
         "http://localhost:3000",
-        "https://dagbok-frontend.vercel.app",
+        process.env.FRONTEND_URL,
       ];
 
       if (!origin || allowedOrigins.includes(origin)) {
