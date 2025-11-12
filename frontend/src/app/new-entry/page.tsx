@@ -129,6 +129,7 @@ export default function NewEntryPage() {
               onChange={(e) => setTitle(e.target.value)}
               className="input-field text-xl font-serif"
               placeholder="Give your entry a title..."
+              autoComplete="off"
               required
               disabled={loading}
             />
@@ -147,6 +148,7 @@ export default function NewEntryPage() {
               onChange={(e) => setContent(e.target.value)}
               className="input-field min-h-[300px] md:min-h-[400px] resize-y leading-relaxed"
               placeholder="Write your thoughts..."
+              autoComplete="off"
               required
               disabled={loading}
             />
@@ -166,9 +168,10 @@ export default function NewEntryPage() {
               onChange={(e) => setTags(e.target.value)}
               className="input-field"
               placeholder="Add tags separated by comma..."
+              autoComplete="off"
               disabled={loading}
             />
-            {tags && (
+            {/* {tags && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {tags
                   .split(",")
@@ -183,7 +186,7 @@ export default function NewEntryPage() {
                     </span>
                   ))}
               </div>
-            )}
+            )} */}
           </div>
 
           {error && (

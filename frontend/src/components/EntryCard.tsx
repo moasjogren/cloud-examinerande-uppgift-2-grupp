@@ -63,8 +63,20 @@ export default function EntryCard({ entry }: EntryCardProps) {
           <p className="text-dark-brown/80 [html.dark_&]:text-cream/80 leading-relaxed whitespace-pre-wrap">
             {entry.content}
           </p>
-
-          {/* Reaction buttons */}
+          {entry.tags && entry.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {entry.tags
+                .filter((tag) => tag.length > 0)
+                .map((tag, index) => (
+                  <span
+                    key={`${entry.id}-tag-${index}`}
+                    className="inline-block bg-dark-brown/80 px-3 py-1 mt-2 rounded-full text-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+            </div>
+          )}
           <EntryReactions entryId={entry.id} />
         </div>
         <div className="flex gap-5 mt-5 h-10">

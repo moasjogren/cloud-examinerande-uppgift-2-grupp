@@ -7,6 +7,7 @@ import EntryCard from "@/components/EntryCard";
 import { useEntriesStore } from "../zustand/entiresStore";
 import SemanticSearchBar from "@/components/Search";
 
+
 export default function DashboardPage() {
   const { entries, loading, error, fetchEntries } = useEntriesStore();
   const [searchResults, setSearchResults] = useState<any[]>([]);
