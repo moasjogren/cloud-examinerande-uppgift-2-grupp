@@ -3,6 +3,12 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
+interface AuthenticatedRequest extends Request {
+ user?: {
+sub: string;
+ email: string;
+  };
+}
 export async function getAllUsers(_req: Request, res: Response) {
   try {
     const users = await User.find();
@@ -143,4 +149,145 @@ export async function logoutUser(req: Request, res: Response) {
     .json({ error, message: "Internal server error during logout" });
   }
    
+}
+
+// backend/src/controllers/userController.ts
+
+export async function addUser(req: AuthenticatedRequest, res: Response) {
+  const { email } = req.body; // Email på användaren som ska läggas till
+  const currentUserId = req.user?.sub; // Från JWT token (auth middleware)
+
+
+  try {
+    // Hitta användaren som ska läggas till via email
+    const userToAdd = await User.findOne({ email });
+    
+    if (!userToAdd) {
+      return res.status(404).json({ message: "User not found with that email" });
+    }
+
+    // Kolla så man inte lägger till sig själv
+    if (userToAdd._id.toString() === currentUserId) {
+      return res.status(400).json({ message: "You cannot add yourself as a friend" });
+    }
+
+    // Hitta den inloggade användaren
+    const currentUser = await User.findById(currentUserId);
+    
+    if (!currentUser) {
+      return res.status(404).json({ message: "Current user not found" });
+    }
+
+    // Kolla om användaren redan är vän
+    if (currentUser.friends.includes(userToAdd._id)) {
+      return res.status(400).json({ message: "User is already your friend" });
+    }
+
+    // Lägg till vänförfrågan
+    if (!userToAdd.friendRequests.includes(currentUser._id)) {
+      userToAdd.friendRequests.push(currentUser._id);
+      await userToAdd.save();
+    }
+
+    return res.status(200).json({ 
+      message: "Friend request sent successfully",
+      user: {
+        _id: userToAdd._id,
+        username: userToAdd.username,
+        email: userToAdd.email
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ 
+      error, 
+      message: "Internal server error adding user" 
+    });
+  }
+}
+
+// Funktion för att acceptera vänförfrågan
+export async function acceptFriendRequest(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req.body; // ID på användaren som skickade förfrågan
+  const currentUserId = req.user?.sub;
+
+  try {
+    const currentUser = await User.findById(currentUserId);
+    const friendUser = await User.findById(userId);
+
+    if (!currentUser || !friendUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Ta bort från friendRequests
+    currentUser.friendRequests = currentUser.friendRequests.filter(
+      id => id.toString() !== userId
+    );
+
+    // Lägg till i friends för båda användarna
+    if (!currentUser.friends.includes(friendUser._id)) {
+      currentUser.friends.push(friendUser._id);
+    }
+    if (!friendUser.friends.includes(currentUser._id)) {
+      friendUser.friends.push(currentUser._id);
+    }
+
+    await currentUser.save();
+    await friendUser.save();
+
+    return res.status(200).json({ 
+      message: "Friend request accepted",
+      friend: {
+        _id: friendUser._id,
+        username: friendUser.username,
+        email: friendUser.email
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ 
+      error, 
+      message: "Internal server error accepting friend request" 
+    });
+  }
+}
+
+// Hämta alla vänner
+export async function getFriends(req: AuthenticatedRequest, res: Response) {
+  const currentUserId = req.user?.sub;
+
+  try {
+    const user = await User.findById(currentUserId)
+      .populate('friends', 'username email'); // Populera med username och email
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ friends: user.friends });
+  } catch (error) {
+    return res.status(500).json({ 
+      error, 
+      message: "Internal server error getting friends" 
+    });
+  }
+}
+
+// Hämta alla väntande vänförfrågningar
+export async function getFriendRequests(req: AuthenticatedRequest, res: Response) {
+  const currentUserId = req.user?.sub;
+
+  try {
+    const user = await User.findById(currentUserId)
+      .populate('friendRequests', 'username email');
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ friendRequests: user.friendRequests });
+  } catch (error) {
+    return res.status(500).json({ 
+      error, 
+      message: "Internal server error getting friend requests" 
+    });
+  }
 }
