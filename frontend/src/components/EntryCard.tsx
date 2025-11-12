@@ -68,10 +68,7 @@ export default function EntryCard({ entry }: EntryCardProps) {
               {entry.tags
                 .filter((tag) => tag.length > 0)
                 .map((tag, index) => (
-                  <span
-                    key={`${entry.id}-tag-${index}`}
-                    className="inline-block bg-dark-brown/80 px-3 py-1 mt-2 rounded-full text-sm"
-                  >
+                  <span key={`${entry.id}-tag-${index}`} className="tags">
                     {tag}
                   </span>
                 ))}
