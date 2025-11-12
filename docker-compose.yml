@@ -19,8 +19,10 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${BACKEND_PORT:-5001}
-      MONGODB_URI: mongodb+srv://team1:dayboukteam1@cluster0.dvfitpo.mongodb.net/?appName=Cluster0
-      JWT_SECRET: BdQu/9El/PeIaLRTrtkGhA4O6vR9TyAavnmCrZL96N196D87kjryO2uchpz8t4oH
+      MONGODB_URI:
+      
+      JWT_SECRET: 
+      
     ports:
       - "${BACKEND_PORT:-5001}:5001"
 
