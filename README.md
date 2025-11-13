@@ -1,64 +1,215 @@
-# Journal App - Student Assignment Starter
+# Journal App - Setup and Testing Guide
 
-A minimalist journaling application built with Next.js 14, TypeScript, Tailwind CSS, and Supabase. This project serves as a starting point for students to practice debugging, adding features, and improving existing code.
+## Översikt
 
+Detta är en fullstack dagboksapplikation där användare kan skriva, redigera och söka bland sina dagboksinlägg. Appen använder AI-baserad semantisk sökning för att hitta relevanta inlägg baserat på innehåll snarare än bara nyckelord.
 
-## Tech Stack
+## Teknisk Stack
 
-- **Frontend Framework:** Next.js 16 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Backend/Database:** Supabase (Authentication + PostgreSQL)
+### Frontend
 
-## Getting Started
+- **Next.js 16** (App Router med TypeScript)
+- **Tailwind CSS** för styling
+- **Zustand** för state management
+- Dark mode support
 
-### 1. Clone the Repository
+### Backend
+
+- **Node.js + Express** (TypeScript)
+- **MongoDB** som databas
+- **JWT** för autentisering
+- **Xenova Transformers** för AI embeddings och semantisk sökning
+
+## Hur man kör projektet lokalt
+
+### Förutsättningar
+
+- Node.js 20 eller senare
+- Docker & Docker Compose (för enklast setup)
+- MongoDB (om du inte använder Docker)
+
+### Alternativ 1: Med Docker Compose (Rekommenderat)
+
+1. **Klona repot:**
+
+   ```bash
+   git clone <repository-url>
+   cd cloud-examinerande-uppgift-2-grupp
+   ```
+
+2. **Skapa .env-filer:**
+
+   **Backend** (backend/.env):
+
+   ```env
+   NODE_ENV=development
+   PORT=5001
+   MONGODB_URI=mongodb://mongo:27017/Daybouk
+   JWT_SECRET=your-secret-key-here
+   ```
+
+   **Frontend** (frontend/.env):
+
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5001
+   ```
+
+3. **Starta alla services:**
+
+   ```bash
+   docker compose up --build
+   ```
+
+4. **Öppna appen:**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5001
+
+### Alternativ 2: Manuell installation
+
+1. **Installera MongoDB lokalt** eller använd MongoDB Atlas
+
+2. **Backend:**
+
+   ```bash
+   cd backend
+   npm install
+   # Skapa .env enligt ovan (använd mongodb://localhost:27017/Daybouk)
+   npm run dev
+   ```
+
+3. **Frontend (i nytt terminalfönster):**
+   ```bash
+   cd frontend
+   npm install
+   # Skapa .env enligt ovan
+   npm run dev
+   ```
+
+## Hur man testar appen
+
+### 1. Skapa ett konto
+
+- Navigera till http://localhost:3000
+- Klicka på "Sign up"
+- Fyll i email, lösenord och bekräfta lösenord
+
+### 2. Skapa dagboksinlägg
+
+- Efter inloggning, klicka på "New Entry"
+- Fyll i titel, innehåll och (optionellt) taggar separerade med komma
+- Klicka "Save Entry"
+
+### 3. Testa funktioner
+
+**Redigera inlägg:**
+
+- Klicka "Edit" på ett inlägg
+- Ändra innehållet
+- Spara
+
+**Ta bort inlägg:**
+
+- Klicka "Delete" på ett inlägg
+- Bekräfta borttagning
+
+**Semantisk sökning:**
+
+- Använd sökfältet på dashboard
+- Skriv in en fråga (t.ex. "hur mådde jag igår?")
+- Se relevanta inlägg baserat på innehåll, inte bara keywords
+
+**Reactions:**
+
+- Klicka på emoji-knapparna under ett inlägg (😊😢😠🤔)
+- Se antalet reactions uppdateras
+
+**Dark mode:**
+
+- Klicka på 🌙/☀️ ikonen i högra hörnet
+
+**Taggar:**
+
+- Lägg till taggar när du skapar/redigerar inlägg
+- Taggar visas under inlägget som små badges
+
+## Köra tester
+
+**Backend:**
 
 ```bash
-git clone <repository-url>
-cd dagboks-appen
+cd backend
+npm test
 ```
 
-### 2. Install Dependencies
+## CI/CD Pipeline
 
-```bash
-npm install
+Projektet använder GitHub Actions för automatisering:
+
+1. **Jest Test** (.github/workflows/jest.yml) - Kör backend-tester vid varje push/PR
+2. **Docker Image CI** (.github/workflows/docker-image.yml) - Bygger Docker images efter lyckade tester
+
+## Projektstruktur
+
+```
+├── frontend/               # Next.js frontend
+│   ├── src/
+│   │   ├── app/           # Next.js App Router sidor
+│   │   ├── components/    # React komponenter
+│   │   └── context/       # Theme context
+│   └── Dockerfile
+│
+├── backend/               # Express backend
+│   ├── src/
+│   │   ├── controllers/  # Request handlers
+│   │   ├── models/       # MongoDB models
+│   │   ├── routes/       # API routes
+│   │   ├── middleware/   # Auth, validation
+│   │   └── services/     # AI embedding service
+│   └── Dockerfile
+│
+└── docker-compose.yml    # Orchestrering av services
 ```
 
-### 3. Set Up Supabase
+## Viktiga endpoints
 
-1. Skapa nytt projekt på supabase
-2. Kör allt som finns i `supabase/schema.sql` i SQL-editorn
-3. Hitta API-nycklar på Supabase och ersätt i .env.example
+**Authentication:**
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your-project-url-here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-```
+- `POST /api/users` - Registrera ny användare
+- `POST /api/users/login` - Logga in
+- `POST /api/users/logout` - Logga ut
 
-## Available Scripts
+**Entries:**
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build the application for production
-- `npm start` - Start the production server
-- `npm run lint` - Run ESLint to check code quality
+- `GET /api/entries` - Hämta alla användarens inlägg
+- `POST /api/entries` - Skapa nytt inlägg
+- `GET /api/entries/:id` - Hämta specifikt inlägg
+- `PATCH /api/entries/:id` - Uppdatera inlägg
+- `DELETE /api/entries/:id` - Ta bort inlägg
 
-## Design Philosophy
+**Search:**
 
-This app follows a minimalist, editorial design approach:
+- `GET /api/search/semantic?query=...` - Semantisk sökning
+- `GET /api/search/tags` - Hämta alla tillgängliga taggar
 
-- **Typography:** Serif fonts for headings, sans-serif for body text
-- **Color Palette:** Cream backgrounds with dark brown text and warm gray accents
-- **Spacing:** Generous whitespace for readability
-- **Layout:** Clean, centered layouts with maximum content width
-- **Interaction:** Subtle hover states and transitions
+## Felsökning
 
+**"Failed to login" / "Not authenticated":**
 
-## Resources
+- Kontrollera att backend körs på rätt port
+- Verifiera `NEXT_PUBLIC_API_URL` i `frontend/.env`
+- Kolla CORS-inställningar i `backend/src/index.ts`
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs)
+**Docker images blir för stora:**
 
-## Fyll på med era reflektioner nedan!
+- Se `.dockerignore` och `frontend/.dockerignore` / `backend/.dockerignore`
+- Multi-stage builds används redan i båda Dockerfiles
+
+**MongoDB connection error:**
+
+- Verifiera att MongoDB körs
+- Kolla `MONGODB_URI` i `backend/.env`
+- Om du använder Docker Compose, kontrollera att mongo-container är uppe
+
+## Mer information
+
+Se `planering.md` för projektplaneringsdetaljer och `uppgiftsbeskrivning.md` för ursprungliga krav.
