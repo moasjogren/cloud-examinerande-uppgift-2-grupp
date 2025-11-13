@@ -53,13 +53,13 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="max-w-4xl mx-auto px-4 md:px-8 lg:px-20 py-12">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 lg:px-20 py-8 sm:py-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <div>
-            <h2 className="page-title text-2xl md:text-3xl font-serif text-dark-brown mb-2">
+            <h2 className="page-title text-xl sm:text-2xl md:text-3xl font-serif text-dark-brown mb-2">
               Your Entries
             </h2>
-            <p className="text-warm-gray text-sm">
+            <p className="text-warm-gray text-xs sm:text-sm">
               {entries.length} {entries.length === 1 ? "entry" : "entries"}
             </p>
           </div>
@@ -75,14 +75,14 @@ export default function DashboardPage() {
         </div>
 
         {isSearching && (
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm text-warm-gray">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <p className="text-xs sm:text-sm text-warm-gray">
               Found {searchResults.length} relevant{" "}
               {searchResults.length === 1 ? "entry" : "entries"}
             </p>
             <button
               onClick={handleClearSearch}
-              className="text-sm text-warm-gray hover:underline"
+              className="text-xs sm:text-sm text-warm-gray hover:underline text-left sm:text-right"
             >
               Show all entries
             </button>

@@ -232,11 +232,76 @@
     color: var(--color-dark-bg);
   }
 
+  /* Small reaction buttons for card corner */
+  .reaction-btn-small {
+    @apply relative px-2 py-1 border border-warm-gray/30 rounded-full bg-dark-brown/80 cursor-pointer transition-all duration-200 flex items-center gap-0.5 text-xs;
+  }
+
+  .reaction-btn-small:hover {
+    @apply bg-beige transform scale-110;
+  }
+
+  .dark .reaction-btn-small {
+    @apply border-[rgba(168,159,145,0.3)];
+  }
+
+  .dark .reaction-btn-small:hover {
+    background-color: var(--color-dark-surface);
+  }
+
+  .reaction-btn-small.active {
+    background-color: var(--color-dark-brown);
+    border-color: var(--color-dark-brown);
+  }
+
+  .dark .reaction-btn-small.active {
+    background-color: var(--color-dark-text);
+  }
+
+  .reaction-count-small {
+    @apply text-[10px] font-semibold;
+    color: var(--color-dark-brown);
+  }
+
+  .dark .reaction-count-small {
+    color: var(--color-dark-text);
+  }
+
+  .reaction-btn-small.active .reaction-count-small {
+    color: var(--color-cream);
+  }
+
+  .dark .reaction-btn-small.active .reaction-count-small {
+    color: var(--color-dark-bg);
+  }
+
   .tags {
     @apply inline-block bg-beige px-3 py-1 mt-2 rounded-full text-sm;
   }
 
   .dark .tags {
     @apply bg-dark-brown/80;
+  }
+
+  /* Icon buttons for Edit/Delete */
+  .icon-btn {
+    @apply p-2 rounded-sm transition-opacity duration-200 cursor-pointer flex items-center justify-center;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    background: transparent;
+    opacity: 0.7;
+  }
+
+  .icon-btn:hover {
+    @apply transform scale-110;
+    opacity: 1;
+  }
+
+  .dark .icon-btn {
+    opacity: 0.8;
+  }
+
+  .dark .icon-btn:hover {
+    opacity: 1;
   }
 }

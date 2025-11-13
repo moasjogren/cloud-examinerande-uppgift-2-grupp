@@ -100,18 +100,18 @@ export default function NewEntryPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="max-w-3xl mx-auto px-4 md:px-6 py-12">
-        <div className="mb-8">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12">
+        <div className="mb-6 sm:mb-8">
           <button
             onClick={() => router.back()}
-            className="back-button text-warm-gray hover:text-dark-brown text-sm mb-4"
+            className="back-button text-warm-gray hover:text-dark-brown text-xs sm:text-sm mb-4"
           >
             ← Back to entries
           </button>
-          <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-2">
+          <h1 className="page-title text-2xl sm:text-3xl md:text-4xl font-serif text-dark-brown mb-2">
             New Entry
           </h1>
-          <p className="text-warm-gray text-sm">{displayDate}</p>
+          <p className="text-warm-gray text-xs sm:text-sm">{displayDate}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -127,7 +127,7 @@ export default function NewEntryPage() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="input-field text-xl font-serif"
+              className="input-field text-lg sm:text-xl font-serif"
               placeholder="Give your entry a title..."
               autoComplete="off"
               required
@@ -146,7 +146,7 @@ export default function NewEntryPage() {
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="input-field min-h-[300px] md:min-h-[400px] resize-y leading-relaxed"
+              className="input-field min-h-[250px] sm:min-h-[300px] md:min-h-[400px] resize-y leading-relaxed text-sm sm:text-base"
               placeholder="Write your thoughts..."
               autoComplete="off"
               required
