@@ -64,7 +64,9 @@ export default function DashboardPage() {
             </p>
           </div>
           <Link href="/new-entry">
-            <button className="btn-primary w-full sm:w-auto">New Entry</button>
+            <button className="btn-primary w-full sm:w-auto cursor-pointer">
+              New Entry
+            </button>
           </Link>
         </div>
 

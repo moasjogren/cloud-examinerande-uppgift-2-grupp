@@ -77,12 +77,15 @@ export default function EntryCard({ entry }: EntryCardProps) {
           <EntryReactions entryId={entry.id} />
         </div>
         <div className="flex gap-5 mt-5 h-10">
-          <button onClick={handleEdit} className="btn-primary w-full sm:w-auto">
+          <button
+            onClick={handleEdit}
+            className="btn-primary w-full sm:w-auto cursor-pointer "
+          >
             Edit
           </button>
           <button
             onClick={handleDelete}
-            className="btn-primary w-full sm:w-auto"
+            className="btn-primary w-full sm:w-auto cursor-pointer"
           >
             Delete
           </button>

@@ -79,7 +79,7 @@
 
   .theme-toggle {
     @apply p-2 rounded-sm  text-2xl
-		       hover:bg-beige
+		      
 		       transition-all duration-200 
 		       active:scale-95;
   }

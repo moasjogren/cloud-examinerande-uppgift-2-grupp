@@ -35,7 +35,10 @@ export default function Header() {
         <h1 className="header-title text-xl md:text-2xl font-serif">Journal</h1>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <button onClick={handleSignOut} className="header-signout-btn">
+          <button
+            onClick={handleSignOut}
+            className="header-signout-btn cursor-pointer"
+          >
             Sign Out
           </button>
         </div>
