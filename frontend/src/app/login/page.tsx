@@ -54,18 +54,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12 relative">
       {/* Theme toggle in top right corner */}
-      <div className="absolute top-6 right-6">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
         <ThemeToggle />
       </div>
 
       <div className="w-full max-w-md">
-        <div className="text-center mb-12">
-          <h1 className="page-title text-3xl md:text-4xl font-serif text-dark-brown mb-3">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="page-title text-2xl sm:text-3xl md:text-4xl font-serif text-dark-brown mb-3">
             Journal
           </h1>
-          <p className="auth-subtitle text-warm-gray text-sm">
+          <p className="auth-subtitle text-warm-gray text-xs sm:text-sm">
             Sign in to your account
           </p>
         </div>

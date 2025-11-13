@@ -49,18 +49,39 @@ export default function EntryCard({ entry }: EntryCardProps) {
   });
 
   return (
-    <div className="card">
-      <div className="flex justify-between h-full w-full items-center">
-        <div className="flex-col">
+    <div className="card relative">
+      <div className="absolute top-4 right-4 flex flex-row gap-2">
+        <button
+          onClick={handleEdit}
+          className="icon-btn"
+          aria-label="Edit entry"
+          title="Edit entry"
+        >
+          <span className="text-lg">✏️</span>
+        </button>
+        <button
+          onClick={handleDelete}
+          className="icon-btn"
+          aria-label="Delete entry"
+          title="Delete entry"
+        >
+          <span className="text-lg">🗑️</span>
+        </button>
+      </div>
+      <div className="absolute bottom-4 right-4">
+        <EntryReactions entryId={entry.id} />
+      </div>
+      <div className="flex flex-col gap-4 pr-20 sm:pr-24 pb-12 sm:pb-16">
+        <div className="flex-1">
           <div className="mb-4">
             <div className="text-xs text-warm-gray mb-2 tracking-wide uppercase">
               {formattedDate}
             </div>
-            <h2 className="text-2xl font-serif text-dark-brown [html.dark_&]:text-cream mb-3">
+            <h2 className="text-xl sm:text-2xl font-serif text-dark-brown [html.dark_&]:text-cream mb-3">
               {entry.title}
             </h2>
           </div>
-          <p className="text-dark-brown/80 [html.dark_&]:text-cream/80 leading-relaxed whitespace-pre-wrap">
+          <p className="text-sm sm:text-base text-dark-brown/80 [html.dark_&]:text-cream/80 leading-relaxed whitespace-pre-wrap">
             {entry.content}
           </p>
           {entry.tags && entry.tags.length > 0 && (
@@ -74,21 +95,6 @@ export default function EntryCard({ entry }: EntryCardProps) {
                 ))}
             </div>
           )}
-          <EntryReactions entryId={entry.id} />
-        </div>
-        <div className="flex gap-5 mt-5 h-10">
-          <button
-            onClick={handleEdit}
-            className="btn-primary w-full sm:w-auto cursor-pointer "
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete}
-            className="btn-primary w-full sm:w-auto cursor-pointer"
-          >
-            Delete
-          </button>
         </div>
       </div>
     </div>

@@ -87,18 +87,18 @@ export function EntryReactions({ entryId }: EntryReactionsProps) {
   ];
   //renderar knapparna med rätt klasser beroende på om användaren har reagerat eller inte
   return (
-    <div className="flex gap-2 w-fit mt-4 mb-[-40px]">
+    <div className="flex flex-wrap gap-1 w-fit">
       {reactionButtons.map(({ type, emoji, label }) => (
         <button
           key={type}
           onClick={() => handleReaction(type)}
-          className={`reaction-btn ${userReactions === type ? "active" : ""}`}
+          className={`reaction-btn-small ${userReactions === type ? "active" : ""}`}
           title={label}
         >
-          <span className="text-xl">{emoji}</span>
+          <span className="text-sm">{emoji}</span>
           {/* {visar antal reaktioner om det är större än 0} */}
           {reactions[type] > 0 && (
-            <span className="reaction-count">{reactions[type]}</span>
+            <span className="reaction-count-small">{reactions[type]}</span>
           )}
         </button>
       ))}

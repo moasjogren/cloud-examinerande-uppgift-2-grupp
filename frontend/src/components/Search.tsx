@@ -61,7 +61,7 @@ export default function SemanticSearchBar({
 
   return (
     <div className="card">
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <input
           type="text"
           value={query}
@@ -73,7 +73,7 @@ export default function SemanticSearchBar({
         />
         <button
           onClick={handleSearch}
-          className="btn-primary cursor-pointer"
+          className="btn-primary cursor-pointer w-full sm:w-auto whitespace-nowrap"
           disabled={loading || !query.trim()}
         >
           {loading ? "Searching..." : "Search"}
