@@ -34,7 +34,8 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="theme-toggle"
+      className="theme-toggle cursor-pointer  transition-transform duration-300 
+            hover:rotate-180"
       aria-label="Toggle theme"
       title={theme === "light" ? "Byt till mörkt läge" : "Byt till ljust läge"}
     >

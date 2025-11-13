@@ -73,7 +73,7 @@ export default function SemanticSearchBar({
         />
         <button
           onClick={handleSearch}
-          className="btn-primary"
+          className="btn-primary cursor-pointer"
           disabled={loading || !query.trim()}
         >
           {loading ? "Searching..." : "Search"}
