@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLoginStore } from "../zustand/loginContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
-// import { signIn } from '@/lib/supabase/auth'
 
 export default function LoginPage() {
   const router = useRouter();
